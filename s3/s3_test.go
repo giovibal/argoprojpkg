@@ -23,6 +23,7 @@ func TestNewS3Client(t *testing.T) {
 		RoleSessionName: "",
 		UseSDKCreds:     false,
 		EncryptOpts:     EncryptOpts{Enabled: true, ServerSideCustomerKey: "", KmsKeyId: "", KmsEncryptionContext: ""},
+		SendContentMd5:  true,
 	}
 	s3If, err := NewS3Client(context.Background(), opts)
 	assert.NoError(t, err)
@@ -36,6 +37,7 @@ func TestNewS3Client(t *testing.T) {
 	assert.Equal(t, opts.Trace, s3cli.Trace)
 	assert.Equal(t, opts.EncryptOpts, s3cli.EncryptOpts)
 	assert.Equal(t, opts.AddressingStyle, s3cli.AddressingStyle)
+	assert.Equal(t, opts.SendContentMd5, s3cli.SendContentMd5)
 	// s3cli.minioClient.
 	// 	s3client.minioClient
 }

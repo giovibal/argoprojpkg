@@ -90,6 +90,7 @@ type S3ClientOpts struct {
 	RoleSessionName string
 	UseSDKCreds     bool
 	EncryptOpts     EncryptOpts
+	SendContentMd5  bool
 }
 
 type s3client struct {
@@ -213,12 +214,13 @@ func (s *s3client) PutFile(bucket, key, path string) error {
 	// NOTE: minio will detect proper mime-type based on file extension
 
 	encOpts, err := s.EncryptOpts.buildServerSideEnc(bucket, key)
+	sendContentMd5 := s.SendContentMd5
 
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
-	_, err = s.minioClient.FPutObject(s.ctx, bucket, key, path, minio.PutObjectOptions{ServerSideEncryption: encOpts})
+	_, err = s.minioClient.FPutObject(s.ctx, bucket, key, path, minio.PutObjectOptions{ServerSideEncryption: encOpts, SendContentMd5: sendContentMd5})
 	if err != nil {
 		return errors.WithStack(err)
 	}
